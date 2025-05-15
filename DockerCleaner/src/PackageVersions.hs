@@ -52,6 +52,9 @@ import Control.Monad (unless)
 
 type PackageVersions = (Map String String)
 
+path :: FilePath
+path = "/app/DockerCleaner"
+
 
 -- Get the packages that might be installed by the given command when executing the given dockerfile
 getUsedPackages :: forall proxy a. InstallCommand a => proxy a -> Dockerfile -> [String]
@@ -146,7 +149,7 @@ loadPackageVersions loadLatestPackageVersions csvFile [] baseImage modifiedDate 
 
 loadPackageVersions loadLatestPackageVersions csvFile usedPackages baseImage modifiedDate dockerfile = do
   let realImgTag = uncurry getRealImageTag baseImage
-  getCommandResult $ "python3 <path-to-dockercleaner>/package-versions/get_package_versions.py " ++ realImgTag ++ " " ++ fromMaybe "1900-01-01" modifiedDate ++ " " ++ csvFile ++ " " ++ intercalate "," usedPackages
+  getCommandResult $ "python3 " ++ path ++ "/package-versions/get_package_versions.py " ++ realImgTag ++ " " ++ fromMaybe "1900-01-01" modifiedDate ++ " " ++ csvFile ++ " " ++ intercalate "," usedPackages
 
   csvPackageVersions <- loadPackageVersionsCsv "./package-versions.csv"
   fetchedPackageVersions <- loadLatestPackageVersions $ filter (\package -> not (member package csvPackageVersions)) usedPackages

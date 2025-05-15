@@ -37,6 +37,9 @@ import Command (getCommandResult)
 import Data.List.Split (splitOn)
 import Data.Tuple (snd)
 
+path :: FilePath
+path = "/app/DockerCleaner"
+
 main :: IO ()
 main = runProgramm =<< execParser opts
   where
@@ -81,7 +84,7 @@ getBaseImagesWithTags = mapMaybe helper where
 
 searchOSBaseImage :: (String, String) -> IO (String, String)
 searchOSBaseImage baseImage = do
-  result <- getCommandResult $ "python3 <path-to-dockercleaner>/package-versions/dso_crawler.py baseos -i " ++ fst baseImage ++ ":" ++ snd baseImage
+  result <- getCommandResult $ "python3 " ++ path ++ "/package-versions/dso_crawler.py baseos -i " ++ fst baseImage ++ ":" ++ snd baseImage
   case result of
     Just res -> return $ toTuple (splitOn ":" res)
     Nothing -> return baseImage
@@ -94,12 +97,12 @@ loadPackageManagerPackageVersions dockerfile modifiedDate = do
   let baseImage = head $ getBaseImagesWithTags dockerfile
   osImage <- searchOSBaseImage baseImage
 
-  aptGetVersions <- AptGetVersions <$> loadPackageVersionsInstallCommand Command.AptGet.proxy "<path-to-dockercleaner>/package-versions/apt-packages.csv" osImage modifiedDate dockerfile
-  apkVersions <- ApkVersions <$> loadPackageVersionsInstallCommand Command.Apk.proxy "<path-to-dockercleaner>/package-versions/apk-packages.csv" osImage modifiedDate dockerfile
+  aptGetVersions <- AptGetVersions <$> loadPackageVersionsInstallCommand Command.AptGet.proxy (path ++ "/package-versions/apt-packages.csv") osImage modifiedDate dockerfile
+  apkVersions <- ApkVersions <$> loadPackageVersionsInstallCommand Command.Apk.proxy (path ++ "/package-versions/apk-packages.csv") osImage modifiedDate dockerfile
 
-  pipVersions <- PipVersions <$> loadPackageVersionsInstallCommand Command.Pip.proxy "<path-to-dockercleaner>/package-versions/pip-packages.csv" osImage modifiedDate dockerfile
-  npmVersions <- NpmVersions <$> loadPackageVersionsInstallCommand Command.Npm.proxy "<path-to-dockercleaner>/package-versions/npm-packages.csv" osImage modifiedDate dockerfile
-  gemVersions <- GemVersions <$> loadPackageVersionsInstallCommand Command.Gem.proxy "<path-to-dockercleaner>/package-versions/gem-packages.csv" osImage modifiedDate dockerfile
+  pipVersions <- PipVersions <$> loadPackageVersionsInstallCommand Command.Pip.proxy (path ++ "/package-versions/pip-packages.csv") osImage modifiedDate dockerfile
+  npmVersions <- NpmVersions <$> loadPackageVersionsInstallCommand Command.Npm.proxy (path ++ "/package-versions/npm-packages.csv") osImage modifiedDate dockerfile
+  gemVersions <- GemVersions <$> loadPackageVersionsInstallCommand Command.Gem.proxy (path ++ "/package-versions/gem-packages.csv") osImage modifiedDate dockerfile
   return PackageManagerPackageVersions {aptGetVersions, pipVersions, npmVersions, apkVersions, gemVersions}
 
 filterBySmellId :: (String -> Bool) -> [Smell] -> [Smell]
