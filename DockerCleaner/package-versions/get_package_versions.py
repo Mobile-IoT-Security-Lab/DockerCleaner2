@@ -47,43 +47,50 @@ def find_versions_csv(package_names, distro_name, modified_date, db_file):
 def find_versions_sqlite(package_names, distro_name, modified_date, db_file):
     con = sqlite3.connect(db_file)
     cur = con.cursor()
-    package_names = "('" + package_names.replace(",", "','") + "')"
-    
+
+    original_package_names = package_names.split(',')
+    package_names_sql = "('" + "', '".join(original_package_names) + "')"
+
     if distro_name == "all":
-        query = f"SELECT distro, package, version, modified_date FROM Packages WHERE package IN {package_names} ORDER BY modified_date DESC"
+        query = f"SELECT distro, package, version, modified_date FROM Packages WHERE package IN {package_names_sql} ORDER BY modified_date DESC"
     else:
-        query = f"SELECT distro, package, version, modified_date FROM Packages WHERE distro ='{distro_name}' and package IN {package_names} ORDER BY modified_date DESC"
-    
+        query = f"SELECT distro, package, version, modified_date FROM Packages WHERE distro = '{distro_name}' AND package IN {package_names_sql} ORDER BY modified_date DESC"
+
     cur.execute(query)
     rows = cur.fetchall()
-    if len(rows) == 0:
+    con.close()
+
+    if not rows:
         print("Not found packages in the package database file")
         return {}
-    
+
     package_versions = {}
-    
+
     for row in rows:
         dis = row[0]
         pkg_name = row[1]
-        if (dis == distro_name or distro_name == "all") and pkg_name in package_names:
+        if (dis == distro_name or distro_name == "all") and pkg_name in original_package_names:
             if pkg_name not in package_versions:
                 package_versions[pkg_name] = [(row[2], row[3])]
             else:
                 package_versions[pkg_name].append((row[2], row[3]))
-    
+
     closet_versions = {}
-  
     modified_date = datetime.date.fromisoformat(modified_date)
+
     for pkg_name in package_versions:
         i = 0
-        while True:
-            print(pkg_name)
+        found = False
+        while i < len(package_versions[pkg_name]):
             current_version = package_versions[pkg_name][i]
             current_version_date = datetime.date.fromisoformat(current_version[1])
             if current_version_date <= modified_date:
                 closet_versions[pkg_name] = current_version[0]
+                found = True
                 break
             i += 1
+        if not found:
+            print(f"No suitable version found for package '{pkg_name}'.")
 
     return closet_versions
 

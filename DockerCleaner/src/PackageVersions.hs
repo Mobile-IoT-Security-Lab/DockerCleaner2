@@ -53,7 +53,7 @@ import Control.Monad (unless)
 type PackageVersions = (Map String String)
 
 path :: FilePath
-path = "/app/DockerCleaner"
+path = ""
 
 
 -- Get the packages that might be installed by the given command when executing the given dockerfile

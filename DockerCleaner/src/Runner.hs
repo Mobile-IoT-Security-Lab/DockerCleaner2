@@ -38,7 +38,7 @@ import Data.List.Split (splitOn)
 import Data.Tuple (snd)
 
 path :: FilePath
-path = "/app/DockerCleaner"
+path = ""
 
 main :: IO ()
 main = runProgramm =<< execParser opts
