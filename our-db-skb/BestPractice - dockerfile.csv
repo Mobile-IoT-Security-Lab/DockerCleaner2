@@ -1,0 +1,84 @@
+ID,Best Practice,Category,Description,Bad example,Good example,Source
+0,SSH server daemon disabled ,Networking,"Running SSH within the container increases the complexity of security management by 
+making it 
+• Difficult to manage access policies and security compliance for SSH server 
+• Difficult to manage keys and passwords across various containers 
+• Difficult to manage security upgrades for SSH server 
+It is possible to have shell access to a container without using SSH, the needlessly 
+increasing the complexity of security management should be avoided. 
+You should SSH into the Docker host, and use docker exec to enter a container.",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark
+https://jpetazzo.github.io/2014/06/23/docker-ssh-considered-evil/"
+1,Container image executed as non-root user,Security,Docker allows to share a directory between the Docker host and a guest container  without limiting the access rights of the container. This means that a user can start a  container and map the / directory on the host to the container. The container would  then be able to modify the host file system without any restrictions. This means that  a user could gain elevated privileges simply by being a member of the docker group and  subsequently start a container which maps the root / directory on the host. ,🔗,🔗,"Docker Security - OWASP Cheat Sheet Series
+Docker documentation
+CIS Docker Benchmark"
+2,Removing setuid and setgid permissions on executables,Security,"The container image must have permissions removed from executables that allow
+a user to execute software at higher privileges.",🔗,🔗,"building-secure-docker-images
+DevSecOps_Enterprise_Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark"
+3,Use absolute paths for WORKDIR,Security,"Using WORKDIR with absolute paths makes the Dockerfile clearer and more understandable. Additionally, relative paths can cause problems if the working context changes between different commands. Using WORKDIR ensures that all subsequent commands are executed in the right context, without depending on directory changes made in previous commands. Finally, complex commands like RUN cd ... && do-something can become difficult to read and maintain.",🔗,🔗,Building best practices | Docker Docs
+4,Avoid sudo command,Security,"Avoid installing or using sudo as it has unpredictable TTY and signal-forwarding behavior that can cause problems. If you absolutely need functionality similar to sudo, such as initializing the daemon as root but running it as non-root, consider using “gosu”.",🔗,🔗,https://docs.docker.com/build/building/best-practices/#user
+5,Delete the apt-get lists after installing something,Security,"- Image Size Reduction: When you run the apt-get update command, the system downloads a list of available packages and stores it in the /var/lib/apt/lists directory. This package cache, if not removed, remains in the final image, unnecessarily increasing its size. Removing the cache files after installing packages reduces the size of the Docker image, making it lighter and faster to download and deploy.
+- Layer Optimization: Docker creates a new layer for each RUN command. If you clear the cache in a separate RUN command than installing packages, the cache remains in the previous layer, making the cleanup ineffective in terms of reducing the overall size of the image. Running the cleanup in the same RUN command ensures that the cache data was never persisted in a separate layer, so it does not affect the final size of the image.
+- Security and Maintainability: Keeping the apt cache only as fresh as necessary reduces the risk of using outdated packages. It also ensures that each build of the Dockerfile starts with a fresh package cache, ensuring that the packages installed are the latest versions available at build time.",🔗,🔗,https://docs.docker.com/build/building/best-practices/#apt-get
+6,The Container Image Must Only Expose Non-Privileged Ports,Networking,"Privileged ports (below 1024) can only be accessed by privileged users (e.g., root) on Linux. Running a container as a privileged user poses a security risk, as it can perform any privileged action on the host if compromised. To safely handle services that typically use privileged ports, such as a web server on port 80, map the privileged port to an unprivileged port within the container (e.g., map port 80 to port 8080). It can be done either in command line or in docker-compose.yml file.
+Exception:  HTTP and HTTPS load balancers have to bind 80/tcp and 443/tcp respectively. Forbidding to map privileged ports effectively forbids from running those in a container, and mandates using an external load balancer. ",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark"
+7,The Container Image Must Be Built With a Process Health Check,Security,"To ensure service availability, Docker's `HEALTHCHECK` instruction can be added to a container image. This allows the container platform to periodically verify the container's functionality. If the container is not working, the platform can stop it and start a new instance to maintain service availability. Short-lived containers that don't need health checks can be exempted.",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark"
+8,Always tag the version of an image explicitly.,Security,"Specificity and Control: Specifying an explicit version of an image ensures that the Dockerfile always uses the same version as the base image. This is important to ensure that the container build is reproducible and consistent. If you just use the image name without specifying the version (like debian), Docker will use the latest available version (known as latest), which may change over time.",🔗,🔗,"Best_Practices_Sicurezza_E_Ottimizzazioni
+CIS Docker Benchmark"
+9,No confidential data in build fields .1,Security,"When container images are created with private or classified data stored within the build file, the data can be backtracked easily by using native commands for the container platform or by using various external tools. These build files are often shared, and without removal of the confidential data, would become exposed and potentially exploited. The credentials must be kept externally, fetched by the application, and not stored in the container image. If the credentials are stored within the container image, anyone with access to the image can parse the credentials.",🔗,🔗,Container_Image_Creation_and_Deployment_Guide
+10,No confidential data in build fields .2,Security,"When container images are created with private or classified data stored within the build file, the data can be backtracked easily by using native commands for the container platform or by using various external tools. These build files are often shared, and without removal of the confidential data, would become exposed and potentially exploited. The credentials must be kept externally, fetched by the application, and not stored in the container image. If the credentials are stored within the container image, anyone with access to the image can parse the credentials.",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark"
+11,Verified packages,Security,"Packages installed from untrusted or unknown sources could be tampered with and could potentially have malicious code or unknown vulnerabilities that could
+be exploited.",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+
+CIS Docker Benchmark
+"
+12,Signed Base Images,Security,"Image building must start with a trusted image with known content from a trusted source. Digital
+signatures of container images provide the capability to trust container image content when
+container images are sent to and received from remote registries. These signatures allow client-
+side verification of the integrity and publisher of specific image tags and ensures provenance of
+container images.",🔗,🔗,"Container_Image_Creation_and_Deployment_Guide
+CIS Docker Benchmark"
+13," Enable only ports used for the service being
+implemented",Security,"To minimize the attack surface, each container image should be a microservice, implementing only one service where possible. Many services require enabled ports for communication. Exposing ports unnecessary for service implementation allows the container to expand the attack surface by giving external malicious users information regarding applications and their versions that are enabled within the container, and possible vulnerabilities that might be used to attack the container.",🔗,🔗,Container_Image_Creation_and_Deployment_Guide
+14,Use WORKDIR to switch to a directory,Performance,"- Consistency: Sets a consistent working directory in which commands will be executed. This is especially useful for ensuring that commands operate in the desired directory.
+- Command Simplification: Avoids having to use absolute paths in each subsequent command.
+- Maintenance: If you need to change the working directory, you can easily do so with a single WORKDIR statement, rather than modifying all subsequent commands.
+Please note that there may be side effects (using cd in a RUN instruction also the advantage of being free of side effects afterwards: that is, it only affects this single RUN instruction, but not any subsequent instructions).",🔗,🔗,https://docs.docker.com/reference/dockerfile/#workdir
+15,Use a minimal base image,Security,"When deploying containers, verify the correct image version using tags to prevent vulnerabilities. Regularly delete older images from the registry to prioritize newer, more secure versions. When building images, ensure the base image is up-to-date to avoid inheriting vulnerabilities",🔗,🔗,Container_Image_Creation_and_Deployment_Guide
+16,Pin base image versions,Security,"Image tags are mutable, meaning a publisher can update a tag to point to a new image. It's important to pin down a specific version of an image so it doesn't change unexpectedly over time. It is important because:
+- Stability: When pinning a specific version of an image, you ensure that the container construction is consistent and predictable.
+- Security: Fixing the image version allows you to maintain an audit trail, i.e. a trace of which version has been used, improving security and traceability.
+- Change Management: Allows you to avoid automatic and potentially destructive changes that could occur if you use a tag like latest or an unspecified version of an image.",🔗,🔗,Building best practices | Docker Docs
+17,Pin versions in apt get install,Security,Version pinning forces the build to retrieve a particular version regardless of what’s in the cache. This technique can also reduce failures due to unanticipated changes in required packages.,🔗,🔗,https://docs.docker.com/build/building/best-practices/#apt-get
+18,"Ensure sensitive host system directories are not mounted on 
+containers ",Security,"If sensitive directories are mounted in read-write mode, it could be possible to make  changes to files within them. This has obvious security implications and should be avoided. In particular, sensitive directories are the following: 
+/ 
+/boot 
+/dev 
+/etc 
+/lib 
+/proc 
+/sys 
+/usr ",🔗,🔗,"CIS Docker Benchmark
+DevSecOps_Enterprise_Container_Image_Creation_and_Deployment_Guide"
+19,Avoid curl bashing in RUN directives,Security,"• Downloading and executing scripts directly from the internet can introduce security risks. The content of the script could be modified, or the site could be compromised.
+• By downloading and verifying files outside the build process, you can ensure their integrity before including them in your image.",🔗,🔗,https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+20,Use COPY instead of ADD for files and folders,Security,"By using COPY, you minimize the attack surface of your Docker build process. The additional features of ADD can inadvertently introduce security vulnerabilities, especially when dealing with untrusted sources or archives.",🔗,🔗,https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+21,Optimize caching for image layers when building an image by ordering commands,Performance,"Optimizing the cache for Docker image layers is an important best practice to improve the efficiency of the build process. By ordering commands in the Dockerfile from least to most frequently changed, the cache usage is maxiized and rebuild times are reduced, making development faster and more predictable.",🔗,🔗,Best_Practices_Sicurezza_E_Ottimizzazioni
+22,Removing unnecessary dependencies,Security,This practice refers to using the –no-install-recommends option (or related options) during package installation. This is a simple practice that aims to reduce the image size and consequently to reduce the attack surface.,🔗,🔗,Building best practices | Docker Docs
+23,Choose the right base image,Security,"When choosing an image, ensure it's built from a trusted source, such as: 
+- Docker Official Images: some of the most secure and dependable images on Docker Hub. Typically, Docker Official images have few or no packages containing CVEs, and are thoroughly reviewed by Docker and project maintainers.
+- Verified Publisher images: high-quality images published and maintained by the organizations partnering with Docker, with Docker verifying the authenticity of the content in their repositories.
+- Docker-Sponsored Open Source: published and maintained by open source projects sponsored by Docker through an open source program.",🔗,🔗,Building best practices | Docker Docs
+24,Use multi-stage builds,Performance,"Multi-stage builds reduce the size of the final image, by creating a cleaner separation between the building of the image and the final output. by splitting the Dockerfile instructions into distinct stages it is sure that the resulting output only contains the files that are needed to run the application.",🔗,🔗,Building best practices | Docker Docs
+25,Use COPY command with specific parameters,Security,"It is an important best practice because the COPY instruction is recursive inside the building context and this behavior may have two possible consequences:
+• Copying unnecessary data and consequently increasing attack surface
+• Accidentally copying sensitive data
+Another solution is to use a .dockerignore file to exclude some file from the building
+process.",🔗,🔗,Building best practices | Docker Docs
+26,Update and install packages in the same RUN instruction,Security,"Having distinct RUN instructions for install and update commands can cause troubles with the cache: if new packages are added and the Dockerfile is rebuilt, Docker will use the packages cached in the layer. This may lead to outdated package installations.",🔗,🔗,Building best practices | Docker Docs
+27,Do not use ADD instruction to download files,Security,"ADD instructions can download and unpack remote files from URLs without any checks, which potentially introduces security risks. They should be replaced by equivalent wget commands or COPY instructions.",🔗,🔗,Building best practices | Docker Docs
