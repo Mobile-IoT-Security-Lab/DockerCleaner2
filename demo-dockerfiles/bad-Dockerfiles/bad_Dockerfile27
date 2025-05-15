@@ -1,0 +1,5 @@
+FROM alpine:latest
+
+### --- Bad Practice 27: Add a remote file using ADD --- ###
+ADD https://example.com/file.tar.gz /app/
+### ---------------------------------------------------- ###

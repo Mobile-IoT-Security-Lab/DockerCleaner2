@@ -1,0 +1,8 @@
+### --- Bad Practice 23: the base image randomuser/unknownimage:latest is not a reliable choice --- ###
+FROM randomuser/unknownimage:latest
+### ----------------------------------------------------------------------------------------------- ###
+
+WORKDIR /app
+COPY . .
+RUN make /app
+CMD ["./app"]

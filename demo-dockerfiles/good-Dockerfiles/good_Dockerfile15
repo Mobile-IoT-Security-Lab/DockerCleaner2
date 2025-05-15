@@ -1,0 +1,13 @@
+## -- Bestpractice 15:  Use a minimal and specific base image -- ##
+FROM nginx:alpine
+## ------------------------------------------------------------- ##
+
+# Copy only necessary configuration and content
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/index.html
+
+# Expose only necessary port
+EXPOSE 80
+
+# Specify a clear CMD with version and configuration
+CMD ["nginx", "-g", "daemon off;"]

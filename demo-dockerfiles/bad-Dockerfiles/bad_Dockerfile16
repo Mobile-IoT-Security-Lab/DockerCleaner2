@@ -1,0 +1,18 @@
+### --- Bad Practice 16: Use a basic Alpine image with a version tag and without pinning it --- ###
+FROM alpine:3.19
+### ------------------------------------------------------------------------------------------- ###
+
+# Install dependencies
+RUN apk update && apk add --no-cache \
+  git \
+  curl \
+  vim
+
+# Copy application code
+COPY . /app
+
+# Set the working directory
+WORKDIR /app
+
+# Command to run the application
+CMD ["./start.sh"]

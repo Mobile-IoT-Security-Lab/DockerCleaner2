@@ -1,0 +1,18 @@
+### Bad Practice 1: container image executed as root user --- ###
+# Use a basic Python image
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt ./
+
+# Example of operations performed as root user
+RUN sudo pip install -r requirements.txt
+
+#Copy the rest of the application code into the container
+COPY . .
+
+# Example of command that could be run as root user (there are no check on the current user)
+CMD ["sh"]

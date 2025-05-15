@@ -1,0 +1,8 @@
+FROM nginx:1.27.0
+
+## -- Best practice 6: exposing non-priviledge port -- ##
+EXPOSE 8080
+## --------------------------------------------------- ##
+
+# Run Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

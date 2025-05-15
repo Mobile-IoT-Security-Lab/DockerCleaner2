@@ -1,0 +1,22 @@
+### --- Best Practice 11b: The GPG key imported into the Dockerfile is used to verify the authenticity 
+# of the software packages installed in the Docker image. --- ###
+
+FROM ubuntu:20.04
+
+# Import the GPG keys, using the apt-key adv command to import a GPG key specified by <GPG_KEY> from the keyserver.ubuntu.com keyserver 
+# GPG keys are used to verify the signature of packages, ensuring that they come from a trusted source
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <GPG_KEY>
+
+# Enable secure APT
+# apt-transport-https: Allows APT to use HTTPS for downloading packages, providing increased security through encrypted communications
+# ca-certificates: Installs CA (Certificate Authority) certificates, which are needed to validate HTTPS connections
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates
+
+# Install packages with authenticity verification
+# The GPG key is implicitly used by APT when installing packages
+RUN apt-get update && \
+    apt-get install -y curl vim --no-install-recommends && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+#NOTE: apt-key adv command may be deprecated

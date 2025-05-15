@@ -1,0 +1,5 @@
+FROM busybox
+
+### --- Bad Practice 14: Do not use WORKDIR to switch to a directory --- ###
+RUN cd /usr/src/app && git clone git@github.com:lukasmartinelli/hadolint.git 
+### -------------------------------------------------------------------- ###

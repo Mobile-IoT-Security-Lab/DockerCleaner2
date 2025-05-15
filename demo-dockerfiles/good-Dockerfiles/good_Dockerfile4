@@ -1,0 +1,4 @@
+FROM alpine:3.20
+### --- Best Practice 4: Do not use sudo command --- ###
+RUN apt-get install
+### ------------------------------------------------- ###

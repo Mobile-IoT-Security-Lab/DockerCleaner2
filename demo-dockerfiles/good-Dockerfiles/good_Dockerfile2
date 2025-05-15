@@ -1,0 +1,21 @@
+# Use a basic Python image
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+###--- Best practice 2: remove setuid and segid ---###
+RUN find /usr -perm /6000 -type f -exec chmod a-s {} \; || true
+###------------------------------------------------###
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt ./
+
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+#Copy the rest of the application code into the container
+COPY . .
+
+# Specify the command to run the application
+CMD ["python", "app.py"]

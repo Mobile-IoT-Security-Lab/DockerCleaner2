@@ -1,0 +1,20 @@
+FROM ubuntu:latest
+
+# Install OpenSSH Server
+RUN apt-get update && apt-get install -y openssh-server
+
+# Creating the directory for the SSH daemon
+RUN mkdir /var/run/sshd
+
+# Adding a user with password
+RUN echo 'root:password' | chpasswd
+
+### --- Bad Practice 0: Allow root access via SSH --- ###
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+### ------------------------------------------------- ###
+
+# SSH port exposure
+EXPOSE 22
+
+# Starting the SSH daemon
+CMD ["/usr/sbin/sshd", "-D"]

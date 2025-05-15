@@ -1,0 +1,12 @@
+### --- Bad Practice 24: all build and runtime steps are combined into a single Dockerfile, which results in a larger image --- ### 
+FROM golang:1.16
+
+WORKDIR /app
+
+# Copy and compile the code
+COPY . .
+RUN go build -o myapp
+
+# Exposes the port and defines the start command
+EXPOSE 8080
+CMD ["./myapp"]

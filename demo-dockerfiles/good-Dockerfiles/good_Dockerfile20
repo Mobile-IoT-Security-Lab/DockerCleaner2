@@ -1,0 +1,9 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -y curl=7.68.0-1ubuntu2.6
+
+### --- Best practice 20: using COPY, which is more secure than ADD --- ###
+COPY myapp /usr/local/bin/
+### ------------------------------------------------------------------- ###
+
+CMD ["/usr/local/bin/myapp"]

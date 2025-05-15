@@ -1,0 +1,8 @@
+FROM nginx:latest
+
+### --- Bad Practice 6: Expose a privileged Port --- ### 
+EXPOSE 22
+### ------------------------------------------------ ###
+
+# Run Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

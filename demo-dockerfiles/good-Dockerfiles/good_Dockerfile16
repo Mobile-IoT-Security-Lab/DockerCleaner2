@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1
+
+### --- Best Practice 16: Pin base image versions --- ### 
+FROM alpine:3.19@sha256:13b7e62e8df80264dbb747995705a986aa530415763a6c58f84a3ca8af9a5bcd
+### ------------------------------------------------- ###
+
+# Install dependencies
+RUN apk update && apk add --no-cache \
+  git \
+  curl \
+  vim
+
+# Copy application code
+COPY . /app
+
+# Set the working directory
+WORKDIR /app
+
+# Command to run the application
+CMD ["./start.sh"]

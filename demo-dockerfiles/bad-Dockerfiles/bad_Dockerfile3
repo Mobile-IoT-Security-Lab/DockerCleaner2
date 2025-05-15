@@ -1,0 +1,9 @@
+# Use a basic Python image
+FROM python:3.9
+
+### --- Bad Practice 3: Do not use host absolute paths for WORKDIR --- ###
+WORKDIR usr/src/app
+### ----------------------------------------------------------------------------- ###
+
+# Specify the command to run the application
+CMD ["python", "app.py"]

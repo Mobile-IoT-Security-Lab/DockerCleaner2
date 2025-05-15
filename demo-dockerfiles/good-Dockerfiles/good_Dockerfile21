@@ -1,0 +1,19 @@
+# Use a basic Python image
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt ./
+
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+### --- Best Practice 21: Copy the code of the application in the container at the end,
+### --- since it changes more frequently --- ###
+COPY . .
+### ---------------------------------------- ###
+
+# Specify the command to run the application
+CMD ["python", "app.py"]

@@ -1,0 +1,20 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -y curl=7.68.0-1ubuntu2.6
+
+### --- Best practice 19: Verify the script --- ###
+# Downloading the script
+ADD https://example.com/install.sh /tmp/install.sh
+
+# Verifying the script (assuming you have a way to verify it, e.g., checksum or GPG)
+RUN echo "expected-checksum-value /tmp/install.sh" | sha256sum -c -
+
+# Make the script executable
+RUN chmod +x /tmp/install.sh
+
+# Execute the script
+RUN /tmp/install.sh
+
+COPY myapp /usr/local/bin/
+
+CMD ["/usr/local/bin/myapp"]

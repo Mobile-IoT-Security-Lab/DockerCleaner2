@@ -1,0 +1,17 @@
+# Good practice: Use a trusted registry with content trust
+FROM ubuntu:latest@sha256:trusted_image_digest  # Use a trusted image digest
+
+## -- Best practice 11:  Update package list and install from official repository -- ##
+RUN apt-get update && apt-get install -y --no-cache-entry gedit 
+## --------------------------------------------------------------------------------- ##
+
+# Build the application (replace with your actual build process)
+COPY . /app
+CMD [ "python", "app.py" ]
+
+# Enforce content trust verification during pull (optional, but recommended)
+RUN echo "docker.contenttrust enabled=true" >> /etc/docker/daemon.json
+
+# Push the image to a registry that supports content trust
+PUSH --tls-verify mytrustedregistry.com/myimage:latest
+

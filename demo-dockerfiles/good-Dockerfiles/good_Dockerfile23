@@ -1,0 +1,15 @@
+### --- Best Practice 23: the python:3.9-slim base image is an official Docker image --- ###
+FROM python:3.9-slim
+### ------------------------------------------------------------------------------------ ###
+
+LABEL maintainer="Your Name <your.email@example.com>"
+LABEL description="Secure and efficient Python application"
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "app.py"]

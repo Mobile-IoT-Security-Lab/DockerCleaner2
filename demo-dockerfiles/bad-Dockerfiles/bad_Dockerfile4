@@ -1,0 +1,4 @@
+FROM busybox
+### --- Bad Practice 4: Use sudo command --- ###
+RUN sudo apt-get install
+### ----------------------------------------- ###

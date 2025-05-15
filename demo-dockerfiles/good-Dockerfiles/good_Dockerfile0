@@ -1,0 +1,20 @@
+# Use an official base image
+FROM alpine:3.20
+
+# Install only the packages needed for your application
+RUN apt-get update && apt-get install -y <package>
+
+# Create directories for the application, data and logs
+RUN mkdir -p /app /app/data /app/logs
+
+# Copy the necessary application files
+COPY . /app
+
+# Set the working directory
+WORKDIR /app
+
+# Set a volume for data and logs
+VOLUME ["/app/data", "/app/logs"]
+
+# Define the command to run the application
+CMD ["<command to run the application>"]

@@ -1,0 +1,21 @@
+### --- BAD Practice 12: Dockerfile using an untrusted base image source --- ###
+FROM evil_company/evil_app:latest
+### ------------------------------------------------------------------------ ###
+
+# Install dependencies without verification
+RUN apt-get update && apt-get install -y \
+    untrusted-package1 \
+    untrusted-package2 \
+    untrusted-package3 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV ENV_VAR1=value1 ENV_VAR2=value2
+
+# Copy application files
+COPY . /app
+
+# Set working directory and start application
+WORKDIR /app
+CMD ["./start.sh"]

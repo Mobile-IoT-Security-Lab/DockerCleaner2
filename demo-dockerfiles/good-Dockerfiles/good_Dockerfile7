@@ -1,0 +1,14 @@
+FROM nginx:1.27.0
+
+# Copy custom configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 8000
+
+## -- Best practice 7: Dockerfile with HEALTHCHECK instruction -- ##
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost || exit 1
+## -------------------------------------------------------------- ## 
+
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

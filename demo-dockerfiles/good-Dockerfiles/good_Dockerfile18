@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+
+### --- Best Practice 18: Mount a non-sensitive directory --- ###
+VOLUME ["/app/data"]
+### --------------------------------------------------------- ###
+
+CMD ["bash"]

@@ -1,0 +1,9 @@
+## -- BAD Practice 7: Dockerfile without HEALTHCHECK instruction -- ##
+
+FROM nginx:latest
+
+# Copy custom configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

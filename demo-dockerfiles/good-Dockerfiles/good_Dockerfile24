@@ -1,0 +1,22 @@
+### --- Best Practice 24: Multi-stage images are used to separate the build process from the final runtime image --- ###
+
+# Build phase
+FROM golang:1.16 AS builder
+
+WORKDIR /app
+
+# Copy and compile the code
+COPY . .
+RUN go build -o myapp
+
+# final phase
+FROM alpine:latest
+
+WORKDIR /root/
+
+# Copy only the executable from the build image
+COPY --from=builder /app/myapp .
+
+# Exposes the port and defines the start command
+EXPOSE 8080
+CMD ["./myapp"]

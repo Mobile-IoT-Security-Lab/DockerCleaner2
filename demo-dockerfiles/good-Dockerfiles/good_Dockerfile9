@@ -1,0 +1,24 @@
+# Use a basic Python image
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt ./
+
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+### --- Best Practice 9: Mount and read the secret --- ###
+RUN --mount=type=secret,id=mysecret,dst=/run/secrets/mysecret cat /run/secrets/mysecret
+### -------------------------------------------------- ###
+
+# Copy the rest of the application code into the container
+COPY . .
+
+# Specify the command to run the application
+CMD ["python", "app.py"]
+
+#NOTE: to add the secret during the build phase:
+# DOCKER_BUILDKIT=1 docker build --secret id=mysecret,src=path/to/secret_file -t my-python-app .

@@ -1,0 +1,14 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -y curl=7.68.0-1ubuntu2.6
+
+### --- Bad Practice 19: Use curl command --- ###
+RUN curl -sL https://example.com/install.sh | bash
+### ----------------------------------------- ###
+
+COPY myapp /usr/local/bin/
+
+CMD ["/usr/local/bin/myapp"]
+
+
+#Bad example: curl bashing: downloading and executing a script directly

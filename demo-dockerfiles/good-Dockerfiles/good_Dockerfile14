@@ -1,0 +1,6 @@
+FROM busybox
+
+### --- Best Practice 14: Use WORKDIR to switch to a directory --- ###
+WORKDIR /usr/src/app
+RUN git clone git@github.com:lukasmartinelli/hadolint.git
+### -------------------------------------------------------------- ###

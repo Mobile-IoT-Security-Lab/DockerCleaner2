@@ -1,0 +1,16 @@
+FROM alpine:3.9
+
+### --- Good Practice 27: Do not use ADD to download remote files --- ###
+# Install wget
+RUN apk add --no-cache wget
+
+# Download the file using wget with security verification
+RUN wget -q -O /app/file.tar.gz https://example.com/file.tar.gz \
+    && echo "expected_checksum /app/file.tar.gz" | sha256sum -c -
+
+# Use COPY to copy local files (avoiding ADD for remote files)
+COPY localfile.txt /app/
+
+# Extract the archive explicitly
+RUN cd /app && tar -xzf file.tar.gz
+### ----------------------------------------------------------------- ###
