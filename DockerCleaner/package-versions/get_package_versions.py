@@ -123,3 +123,11 @@ if __name__ == "__main__":
         f.write("package,version\n")
         for k, v in closet_versions.items():
             f.write(f"{k},{v}\n")
+
+
+    # if package_versions contains only one line, then remove the file
+    with open("package-versions.csv", "r") as f:
+        lines = f.readlines()
+        if len(lines) == 1:
+            f.close()
+            subprocess.run(f"rm -f package-versions.csv", shell=True)
