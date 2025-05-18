@@ -10,8 +10,7 @@ COPY . .
 # RUN python3 -m venv /venv  # Changed to /venv
 # RUN /venv/bin/pip install requests
 
-RUN wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
-RUN chmod +x /bin/hadolint
+RUN wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 && chmod +x /bin/hadolint
 
 RUN curl --tlsv1.2 -sSf https://get-ghcup.haskell.org  | sh
 ENV PATH="/root/.ghcup/bin:/root/.local/bin:${PATH}"
@@ -37,6 +36,10 @@ RUN /venv/bin/pip install --no-cache-dir requests
 COPY --from=builder /root/.local/bin/dockercleaner /usr/local/bin/
 COPY DockerCleaner/package-versions/ /package-versions
 
+RUN mkdir -p /io
+
 ENV PATH="/venv/bin:${PATH}:/usr/local/bin"
+
+WORKDIR /io
 
 ENTRYPOINT [ "dockercleaner" ]
