@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           dockercleaner
-version:        0.1.0.0
+version:        0.2.0.0
 description:    Please see the README on GitHub at <example_user/dockercleaner#readme>
 homepage:       https://github.com/example_user/dockercleaner#readme
 bug-reports:    https://github.com/example_user/dockercleaner/issues
