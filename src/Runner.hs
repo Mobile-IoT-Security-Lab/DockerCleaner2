@@ -47,8 +47,8 @@ main = runProgramm =<< execParser opts
       info
         (options <**> helper)
         ( fullDesc
-            <> progDesc "Inject and fix dockerfile security smells"
-            <> header "dockercleaner - inject & fix Dockerfile security smells"
+            <> progDesc "enri was here - Inject and fix dockerfile security smells"
+            <> header "enri was here - dockercleaner - inject & fix Dockerfile security smells"
         )
 
 createPreProcessMetadata :: InputFilePath -> Text -> Dockerfile -> Int -> Metadata

@@ -1,5 +1,10 @@
+.stack-work/
+*~%
+*versions.csv
 .DS_Store
 ~$*
 venv
 .vscode
 *.txt
+dist-newstyle/cache/*
+
