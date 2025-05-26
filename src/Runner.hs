@@ -8,8 +8,7 @@ import Language.Docker
     prettyPrint,
   )
 import Metadata (DockerfileWithMetadata, Metadata (..), newMetadata, fixAllWithMetadata, injectAllWithMetadata)
-import Options.Applicative
-    ( header, progDesc, fullDesc, helper, (<**>), info, execParser )
+import Options.Applicative (header, progDesc, fullDesc, helper, (<**>), info, execParser)
 import Data.Maybe (fromMaybe, maybe, Maybe)
 import Smells (getSmellIds, Smell (smellId), getSmells, getSmellInjectors, PackageManagerPackageVersions (..), NpmVersions (NpmVersions), PipVersions (PipVersions), AptGetVersions (AptGetVersions), selectRandomSmells, ApkVersions (ApkVersions), GemVersions (GemVersions))
 import ShellCheck.AST (Token)
@@ -51,6 +50,7 @@ main = runProgramm =<< execParser opts
             <> header "enri was here - dockercleaner - inject & fix Dockerfile security smells"
         )
 
+-- 
 createPreProcessMetadata :: InputFilePath -> Text -> Dockerfile -> Int -> Metadata
 createPreProcessMetadata dockerfilePath dockerfileText dockerfile randomGenSeed =
   newMetadata
