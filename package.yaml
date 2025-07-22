@@ -8,6 +8,7 @@ copyright:           "2022 Author name here"
 
 extra-source-files:
 - ChangeLog.md
+- our-db-skb/BestPractices-dockerfile.csv
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package

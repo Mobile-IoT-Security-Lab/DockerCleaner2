@@ -17,6 +17,7 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     ChangeLog.md
+    our-db-skb/BestPractices-dockerfile.csv
 
 source-repository head
   type: git
@@ -24,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      BestPractice
       Command
       Command.Addgroup
       Command.Adduser
